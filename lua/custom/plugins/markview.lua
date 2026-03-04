@@ -3,12 +3,8 @@ return {
   lazy = false,
   dependencies = { 'saghen/blink.cmp' },
 
-  init = function()
-    -- Ensure Markview is OFF by default (global state)
-    vim.cmd 'Markview Disable'
-  end,
-
   config = function()
+    vim.cmd 'Markview Disable'
     -- Create the toggle only for Markdown buffers
     vim.api.nvim_create_autocmd('FileType', {
       pattern = 'markdown',
