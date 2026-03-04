@@ -3,11 +3,11 @@ return {
     'lewis6991/gitsigns.nvim',
     opts = {
       signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
+        add = { text = '│' },
+        change = { text = '│' },
+        delete = { text = '▁' },
+        topdelete = { text = '▔' },
+        changedelete = { text = '│' },
       },
       on_attach = function(bufnr)
         local gitsigns = require 'gitsigns'
@@ -17,6 +17,10 @@ return {
           opts.buffer = bufnr
           vim.keymap.set(mode, l, r, opts)
         end
+
+        vim.api.nvim_set_hl(0, 'GitSignsAdd', { fg = '#50fa7b' })
+        vim.api.nvim_set_hl(0, 'GitSignsChange', { fg = '#8be9fd' })
+        vim.api.nvim_set_hl(0, 'GitSignsDelete', { fg = '#ff5555' })
 
         -- Navigation
         map('n', ']c', function()
