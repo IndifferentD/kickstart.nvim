@@ -93,6 +93,12 @@ return {
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
+
+          if client and client.name == 'sqls' then
+            client.server_capabilities.documentFormattingProvider = false
+            client.server_capabilities.documentRangeFormattingProvider = false
+          end
+
           if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
             local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
@@ -189,8 +195,14 @@ return {
           --   },
           -- },
         },
-        sqlls = {},
-        -- rust_analyzer = {},
+        -- sqlls = {
+        --   -- optional: you can override defaults, but you usually don't need to.
+        --   cmd = { 'sql-language-server', 'up', '--method', 'stdio' },
+        --   filetypes = { 'sql', 'mysql' },
+        -- },
+        sqls = {
+          filetypes = { 'sql', 'mysql' },
+        },
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
