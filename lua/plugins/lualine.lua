@@ -35,14 +35,21 @@ return {
       },
     },
     sections = {
-      lualine_a = { 'mode' },
-      lualine_b = {
+      lualine_a = {
         {
-          'branch',
-          icon = '',
+          'mode',
+          fmt = function(str)
+            return str:sub(1, 1)
+          end,
         },
       },
-      lualine_c = {
+      lualine_b = {
+        {
+          function()
+            return vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+          end,
+          icon = '',
+        },
         {
           'filename',
           symbols = {
@@ -51,6 +58,42 @@ return {
             unnamed = '[No Name]',
             newfile = '[New]',
           },
+        },
+      },
+      lualine_c = {
+        {
+          'branch',
+          icon = '',
+        },
+        {
+          'diff',
+          symbols = { added = ' ', modified = ' ', removed = ' ' },
+        },
+        {
+          function()
+            local ok, navic = pcall(require, 'nvim-navic')
+            if not ok or not navic.is_available() then
+              return ''
+            end
+            return navic.get_location()
+          end,
+          cond = function()
+            local ok, navic = pcall(require, 'nvim-navic')
+            return ok and navic.is_available()
+          end,
+          color = { fg = '#7aa2f7' },
+        },
+      },
+      lualine_x = {
+        {
+          function()
+            local buf_clients = vim.lsp.get_clients { bufnr = 0 }
+            if #buf_clients == 0 then
+              return 'No LSP'
+            end
+            return buf_clients[1].name
+          end,
+          icon = '',
         },
         {
           'diagnostics',
@@ -66,8 +109,6 @@ return {
           update_in_insert = false,
           always_visible = false,
         },
-      },
-      lualine_x = {
         {
           'filetype',
           icon_only = false,

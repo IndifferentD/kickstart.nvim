@@ -12,6 +12,14 @@ return {
 
       -- Useful status updates for LSP.
       { 'j-hui/fidget.nvim', opts = {} },
+      {
+        'SmiteshP/nvim-navic',
+        opts = {
+          highlight = true,
+          separator = ' > ',
+          depth_limit = 5,
+        },
+      },
 
       -- Allows extra capabilities provided by blink.cmp
       'saghen/blink.cmp',
@@ -120,6 +128,10 @@ return {
                 vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
               end,
             })
+          end
+
+          if client and client.server_capabilities.documentSymbolProvider then
+            require('nvim-navic').attach(client, event.buf)
           end
 
           -- The following code creates a keymap to toggle inlay hints in your
