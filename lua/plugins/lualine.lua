@@ -86,16 +86,6 @@ return {
       },
       lualine_x = {
         {
-          function()
-            local buf_clients = vim.lsp.get_clients { bufnr = 0 }
-            if #buf_clients == 0 then
-              return 'No LSP'
-            end
-            return buf_clients[1].name
-          end,
-          icon = '',
-        },
-        {
           'diagnostics',
           sources = { 'nvim_diagnostic' },
           sections = { 'error', 'warn', 'info', 'hint' },
@@ -108,6 +98,16 @@ return {
           colored = true,
           update_in_insert = false,
           always_visible = false,
+        },
+        {
+          function()
+            local buf_clients = vim.lsp.get_clients { bufnr = 0 }
+            if #buf_clients == 0 then
+              return 'No LSP'
+            end
+            return buf_clients[1].name
+          end,
+          icon = '',
         },
         {
           'filetype',
