@@ -25,6 +25,13 @@ return {
       'saghen/blink.cmp',
     },
     config = function()
+      -- Neovim 0.11 ships global LSP defaults like `gra`, `grr`, `grn`, etc.
+      -- They make `gr` behave like a prefix, which conflicts with this config's
+      -- direct `gr` mapping for references.
+      for _, keys in ipairs { 'gra', 'gri', 'grn', 'grr', 'grt' } do
+        pcall(vim.keymap.del, 'n', keys)
+      end
+
       -- If you're wondering about lsp vs treesitter, you can check out the wonderfully
       -- and elegantly composed help section, `:help lsp-vs-treesitter`
 
