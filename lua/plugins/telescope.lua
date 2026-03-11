@@ -16,6 +16,17 @@ return {
     },
     config = function()
       require('telescope').setup {
+        defaults = {
+          layout_strategy = 'vertical',
+          layout_config = {
+            height = 0.85,
+            width = 0.85,
+            mirror = true,
+            prompt_position = 'top',
+            preview_cutoff = 1,
+            preview_height = 0.8,
+          },
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
