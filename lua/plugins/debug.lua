@@ -21,7 +21,7 @@ return {
         layouts = {
           {
             position = 'left',
-            size = 75, -- ширина левой панели
+            size = 55, -- ширина левой панели
             elements = {
               { id = 'scopes', size = 0.50 },
               { id = 'breakpoints', size = 0.15 },
