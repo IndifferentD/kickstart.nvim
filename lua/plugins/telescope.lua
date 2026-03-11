@@ -24,7 +24,6 @@ return {
             mirror = true,
             prompt_position = 'top',
             preview_cutoff = 1,
-            preview_height = 0.8,
           },
         },
         extensions = {
