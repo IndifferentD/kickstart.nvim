@@ -268,6 +268,7 @@ return {
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
         'delve', -- Used by nvim-dap-go
+        'golangci-lint', -- Used by nvim-lint for Go diagnostics
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
       require('mason-lspconfig').setup {
