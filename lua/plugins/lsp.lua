@@ -141,6 +141,18 @@ return {
             require('nvim-navic').attach(client, event.buf)
           end
 
+          if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_codeLens, event.buf) then
+            local codelens_group = vim.api.nvim_create_augroup('kickstart-lsp-codelens', { clear = false })
+            vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorHold', 'InsertLeave' }, {
+              buffer = event.buf,
+              group = codelens_group,
+              callback = vim.lsp.codelens.refresh,
+            })
+
+            map('<leader>cl', vim.lsp.codelens.run, '[C]ode [L]ens')
+            vim.lsp.codelens.refresh()
+          end
+
           -- The following code creates a keymap to toggle inlay hints in your
           -- code, if the language server you are using supports them
           --
@@ -199,7 +211,19 @@ return {
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        gopls = {},
+        gopls = {
+          settings = {
+            gopls = {
+              vulncheck = 'Imports',
+              codelenses = {
+                run_govulncheck = true,
+                upgrade_dependency = true,
+                tidy = true,
+                vendor = true,
+              },
+            },
+          },
+        },
         basedpyright = {
           cmd = { 'basedpyright-langserver', '--stdio' },
           filetypes = { 'python' },
