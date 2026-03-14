@@ -15,11 +15,11 @@ return {
       end
 
       local lint_augroup = vim.api.nvim_create_augroup('nvim-lint', { clear = true })
-      vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost' }, {
+      vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
         group = lint_augroup,
         callback = function(args)
           if vim.bo[args.buf].filetype == 'go' then
-            lint.try_lint()
+            lint.try_lint(nil, { ignore_errors = true })
           end
         end,
       })
