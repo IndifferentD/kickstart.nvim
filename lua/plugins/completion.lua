@@ -22,7 +22,7 @@ return {
       'folke/lazydev.nvim',
     },
     opts = {
-      keymap = { preset = 'default' },
+      keymap = { preset = 'enter' },
       appearance = { nerd_font_variant = 'mono' },
       completion = {
         documentation = { auto_show = false, auto_show_delay_ms = 500 },
