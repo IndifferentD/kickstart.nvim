@@ -15,6 +15,7 @@ return {
       local dap = require 'dap'
       local dapui = require 'dapui'
       local dap_python = require 'dap-python'
+      local map = vim.keymap.set
       dap_python.setup 'uv'
       -- dap_python.test_runner = "pytest"
       dapui.setup {
@@ -81,39 +82,39 @@ return {
       -- local opts = { noremap = true, silent = true }
 
       -- Toggle breakpoint
-      vim.keymap.set('n', '<leader>db', function()
+      map('n', '<leader>db', function()
         dap.toggle_breakpoint()
       end, { desc = 'Toogle [D]ap [B]reakpoint' })
 
       -- Continue / Start
-      vim.keymap.set('n', '<leader>dc', function()
+      map('n', '<leader>dc', function()
         dap.continue()
       end, { desc = '[D]ap [C]ontinue' })
 
       -- Step Over
-      vim.keymap.set('n', '<leader>do', function()
+      map('n', '<leader>do', function()
         dap.step_over()
       end, { desc = '[D]ap step [O]ver' })
 
       -- Step Into
-      vim.keymap.set('n', '<leader>di', function()
+      map('n', '<leader>di', function()
         dap.step_into()
       end, { desc = '[D]ap step [I]nto' })
 
       -- Step Out
-      vim.keymap.set('n', '<leader>dO', function()
+      map('n', '<leader>dO', function()
         dap.step_out()
       end, { desc = '[D]ap step [O]out' })
 
       -- Keymap to terminate debugging
-      vim.keymap.set('n', '<leader>dq', function()
+      map('n', '<leader>dq', function()
         require('dap').terminate()
       end, { desc = '[D]ap [Q]uit' })
 
       -- vim.keymap.set('n', '<leader>dh', function()
       --   require('dap.ui.widgets').hover()
       -- end, { desc = '[D]ap [H]over variable' })
-      vim.keymap.set('n', '<leader>dh', function()
+      map('n', '<leader>dh', function()
         local widgets = require 'dap.ui.widgets'
 
         widgets.hover()
@@ -132,8 +133,8 @@ return {
           end
         end
 
-        vim.keymap.set('n', 'q', close_float, { buffer = buf, silent = true })
-        vim.keymap.set('n', '<Esc>', close_float, { buffer = buf, silent = true })
+        map('n', 'q', close_float, { buffer = buf, silent = true })
+        map('n', '<Esc>', close_float, { buffer = buf, silent = true })
 
         local group = vim.api.nvim_create_augroup('DapHoverClose' .. win, { clear = true })
 
@@ -145,9 +146,33 @@ return {
       end, { desc = '[D]ap [H]over variable' })
 
       -- Toggle DAP UI
-      vim.keymap.set('n', '<leader>du', function()
+      map('n', '<leader>du', function()
         dapui.toggle()
       end, { desc = '[D]ap toogle [U]I' })
+
+      -- JetBrains-style debug flow on function keys.
+      map('n', '<F7>', function()
+        dap.step_into()
+      end, { desc = 'Debug: Step Into' })
+      map('n', '<F8>', function()
+        dap.step_over()
+      end, { desc = 'Debug: Step Over' })
+      map('n', '<S-F8>', function()
+        dap.step_out()
+      end, { desc = 'Debug: Step Out' })
+      map('n', '<F9>', function()
+        dap.continue()
+      end, { desc = 'Debug: Resume' })
+      map('n', '<S-F9>', function()
+        dap.continue()
+      end, { desc = 'Debug: Start / Continue' })
+      map('n', '<C-F8>', function()
+        dap.toggle_breakpoint()
+      end, { desc = 'Debug: Toggle Breakpoint' })
+      map('n', '<A-F8>', function()
+        local widgets = require 'dap.ui.widgets'
+        widgets.hover()
+      end, { desc = 'Debug: Inspect Value' })
 
       dap.listeners.after.event_initialized['dapui_config'] = dapui.open
       dap.listeners.before.event_terminated['dapui_config'] = dapui.close
