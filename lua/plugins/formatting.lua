@@ -26,9 +26,12 @@ return {
         }
       end,
       formatters_by_ft = {
+        javascript = { 'prettierd', 'prettier' },
         python = { 'ruff_fix', 'ruff_format' },
         lua = { 'stylua' },
         sql = { 'pg_format' },
+        typescript = { 'prettierd', 'prettier' },
+        vue = { 'prettierd', 'prettier' },
       },
     },
   },

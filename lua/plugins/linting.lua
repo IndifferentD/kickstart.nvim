@@ -6,7 +6,10 @@ return {
       local lint = require 'lint'
 
       lint.linters_by_ft = {
+        javascript = { 'eslint_d' },
         go = { 'golangcilint' },
+        typescript = { 'eslint_d' },
+        vue = { 'eslint_d' },
       }
 
       local golangcilint = lint.linters.golangcilint
@@ -18,7 +21,15 @@ return {
       vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
         group = lint_augroup,
         callback = function(args)
-          if vim.bo[args.buf].filetype == 'go' then
+          local filetype = vim.bo[args.buf].filetype
+          local lintable_filetypes = {
+            go = true,
+            javascript = true,
+            typescript = true,
+            vue = true,
+          }
+
+          if lintable_filetypes[filetype] then
             lint.try_lint(nil, { ignore_errors = true })
           end
         end,
