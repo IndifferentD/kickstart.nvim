@@ -10,7 +10,7 @@ return {
       cancel_deferred_save = { 'InsertEnter' },
     },
 
-    debounce_delay = 5000,
+    debounce_delay = 2000,
 
     condition = function(buf)
       local fn = vim.fn
