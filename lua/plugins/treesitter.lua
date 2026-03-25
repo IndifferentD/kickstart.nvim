@@ -23,6 +23,7 @@ return {
         'markdown',
         'markdown_inline',
         'query',
+        'sql',
         'typescript',
         'vue',
         'vim',
