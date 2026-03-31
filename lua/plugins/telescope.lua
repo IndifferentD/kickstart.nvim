@@ -15,6 +15,11 @@ return {
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
     },
     config = function()
+      vim.api.nvim_set_hl(0, 'TelescopeMatching', { fg = '#f6c177', bold = true })
+      vim.api.nvim_set_hl(0, 'TelescopeSelection', { bg = '#2a2837' })
+      vim.api.nvim_set_hl(0, 'TelescopeSelectionCaret', { fg = '#9ccfd8', bg = '#2a2837' })
+      vim.api.nvim_set_hl(0, 'TelescopeMultiSelection', { fg = '#ebbcba', bold = true })
+
       require('telescope').setup {
         defaults = {
           layout_strategy = 'vertical',
