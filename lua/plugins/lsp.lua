@@ -23,6 +23,108 @@ return {
       'saghen/blink.cmp',
     },
     config = function()
+      local function buffer_augroup_name(prefix, bufnr)
+        return string.format('%s-%d', prefix, bufnr)
+      end
+
+      ---@param client vim.lsp.Client
+      ---@param method vim.lsp.protocol.Method
+      ---@param bufnr? integer
+      ---@return boolean
+      local function client_supports_method(client, method, bufnr)
+        if vim.fn.has 'nvim-0.11' == 1 then
+          return client:supports_method(method, bufnr)
+        else
+          return client.supports_method(method, { bufnr = bufnr })
+        end
+      end
+
+      local function has_highlight_client(bufnr)
+        for _, client in ipairs(vim.lsp.get_clients { bufnr = bufnr }) do
+          if client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, bufnr) then
+            return true
+          end
+        end
+
+        return false
+      end
+
+      local function setup_document_highlight(client, bufnr)
+        if not client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, bufnr) then
+          return
+        end
+
+        local highlight_group = vim.api.nvim_create_augroup(buffer_augroup_name('kickstart-lsp-highlight', bufnr), { clear = true })
+        vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+          buffer = bufnr,
+          group = highlight_group,
+          callback = vim.lsp.buf.document_highlight,
+        })
+
+        vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+          buffer = bufnr,
+          group = highlight_group,
+          callback = vim.lsp.buf.clear_references,
+        })
+
+        vim.api.nvim_create_autocmd('LspDetach', {
+          group = vim.api.nvim_create_augroup(buffer_augroup_name('kickstart-lsp-detach', bufnr), { clear = true }),
+          buffer = bufnr,
+          callback = function(event)
+            vim.schedule(function()
+              if has_highlight_client(event.buf) then
+                return
+              end
+
+              vim.lsp.buf.clear_references()
+              vim.api.nvim_clear_autocmds {
+                group = buffer_augroup_name('kickstart-lsp-highlight', event.buf),
+                buffer = event.buf,
+              }
+            end)
+          end,
+        })
+      end
+
+      local function setup_navic(client, bufnr)
+        if client.server_capabilities.documentSymbolProvider then
+          require('nvim-navic').attach(client, bufnr)
+        end
+      end
+
+      local function setup_codelens(client, bufnr, map)
+        if not client_supports_method(client, vim.lsp.protocol.Methods.textDocument_codeLens, bufnr) then
+          return
+        end
+
+        local codelens_group = vim.api.nvim_create_augroup(buffer_augroup_name('kickstart-lsp-codelens', bufnr), { clear = true })
+        vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorHold', 'InsertLeave' }, {
+          buffer = bufnr,
+          group = codelens_group,
+          callback = vim.lsp.codelens.refresh,
+        })
+
+        map('<leader>cl', vim.lsp.codelens.run, '[C]ode [L]ens')
+        vim.lsp.codelens.refresh()
+      end
+
+      local function setup_inlay_hints(client, bufnr, map)
+        if not client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, bufnr) then
+          return
+        end
+
+        map('<leader>th', function()
+          vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = bufnr })
+        end, '[T]oggle Inlay [H]ints')
+      end
+
+      local function configure_client_capabilities(client)
+        if client.name == 'sqls' then
+          client.server_capabilities.documentFormattingProvider = false
+          client.server_capabilities.documentRangeFormattingProvider = false
+        end
+      end
+
       -- Neovim 0.11 ships global LSP defaults like `gra`, `grr`, `grn`, etc.
       -- They make `gr` behave like a prefix, which conflicts with this config's
       -- direct `gr` mapping for references.
@@ -87,79 +189,16 @@ return {
           --  the definition of its *type*, not where it was *defined*.
           map('gy', require('telescope.builtin').lsp_type_definitions, 'Goto T[y]pe Definition')
 
-          -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
-          ---@param client vim.lsp.Client
-          ---@param method vim.lsp.protocol.Method
-          ---@param bufnr? integer some lsp support methods only in specific files
-          ---@return boolean
-          local function client_supports_method(client, method, bufnr)
-            if vim.fn.has 'nvim-0.11' == 1 then
-              return client:supports_method(method, bufnr)
-            else
-              return client.supports_method(method, { bufnr = bufnr })
-            end
-          end
-
-          -- The following two autocommands are used to highlight references of the
-          -- word under your cursor when your cursor rests there for a little while.
-          --    See `:help CursorHold` for information about when this is executed
-          --
-          -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
-
-          if client and client.name == 'sqls' then
-            client.server_capabilities.documentFormattingProvider = false
-            client.server_capabilities.documentRangeFormattingProvider = false
+          if not client then
+            return
           end
 
-          if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
-            local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
-            vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-              buffer = event.buf,
-              group = highlight_augroup,
-              callback = vim.lsp.buf.document_highlight,
-            })
-
-            vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-              buffer = event.buf,
-              group = highlight_augroup,
-              callback = vim.lsp.buf.clear_references,
-            })
-
-            vim.api.nvim_create_autocmd('LspDetach', {
-              group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
-              callback = function(event2)
-                vim.lsp.buf.clear_references()
-                vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
-              end,
-            })
-          end
-
-          if client and client.server_capabilities.documentSymbolProvider then
-            require('nvim-navic').attach(client, event.buf)
-          end
-
-          if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_codeLens, event.buf) then
-            local codelens_group = vim.api.nvim_create_augroup('kickstart-lsp-codelens', { clear = false })
-            vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorHold', 'InsertLeave' }, {
-              buffer = event.buf,
-              group = codelens_group,
-              callback = vim.lsp.codelens.refresh,
-            })
-
-            map('<leader>cl', vim.lsp.codelens.run, '[C]ode [L]ens')
-            vim.lsp.codelens.refresh()
-          end
-
-          -- The following code creates a keymap to toggle inlay hints in your
-          -- code, if the language server you are using supports them
-          --
-          -- This may be unwanted, since they displace some of your code
-          if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
-            map('<leader>th', function()
-              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
-            end, '[T]oggle Inlay [H]ints')
-          end
+          configure_client_capabilities(client)
+          setup_document_highlight(client, event.buf)
+          setup_navic(client, event.buf)
+          setup_codelens(client, event.buf, map)
+          setup_inlay_hints(client, event.buf, map)
         end,
       })
 

@@ -22,14 +22,22 @@ return {
         group = lint_augroup,
         callback = function(args)
           local filetype = vim.bo[args.buf].filetype
-          local lintable_filetypes = {
-            go = true,
+          local event = args.event
+
+          if filetype == 'go' then
+            if event == 'BufWritePost' then
+              lint.try_lint(nil, { ignore_errors = true })
+            end
+            return
+          end
+
+          local frontend_filetypes = {
             javascript = true,
             typescript = true,
             vue = true,
           }
 
-          if lintable_filetypes[filetype] then
+          if frontend_filetypes[filetype] then
             lint.try_lint(nil, { ignore_errors = true })
           end
         end,
