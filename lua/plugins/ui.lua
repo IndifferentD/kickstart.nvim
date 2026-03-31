@@ -1,18 +1,17 @@
 return {
   {
-    'folke/tokyonight.nvim',
+    'rose-pine/neovim',
+    name = 'rose-pine',
     lazy = false,
     priority = 1000,
     config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        style = 'night',
-        transparent = false,
+      require('rose-pine').setup {
         styles = {
-          comments = { italic = false },
+          italic = false,
+          transparency = false,
         },
       }
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'rose-pine'
     end,
   },
   {
@@ -30,6 +29,24 @@ return {
           done_ttl = 3,
           skip_history = false,
         },
+      },
+    },
+  },
+  {
+    'folke/noice.nvim',
+    event = 'VeryLazy',
+    dependencies = { 'MunifTanjim/nui.nvim' },
+    opts = {
+      cmdline = {
+        enabled = true,
+        view = 'cmdline_popup',
+      },
+      popupmenu = {
+        enabled = true,
+      },
+      presets = {
+        bottom_search = false,
+        command_palette = false,
       },
     },
   },
