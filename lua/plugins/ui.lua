@@ -10,6 +10,12 @@ return {
           italic = false,
           transparency = false,
         },
+        highlight_groups = {
+          NoiceCmdlinePopupCmdline = { fg = 'text', bg = 'highlight_low' },
+          NoiceCmdlinePopupBorderCmdline = { fg = 'love', bg = 'highlight_low' },
+          NoiceCmdlinePopupTitleCmdline = { fg = 'love', bg = 'highlight_low', bold = true },
+          NoiceCmdlineIconCmdline = { fg = 'love', bg = 'highlight_low' },
+        },
       }
       vim.cmd.colorscheme 'rose-pine'
     end,
@@ -111,6 +117,19 @@ return {
       cmdline = {
         enabled = true,
         view = 'cmdline_popup',
+        format = {
+          cmdline = {
+            opts = {
+              win_options = {
+                winhighlight = {
+                  Normal = 'NoiceCmdlinePopupCmdline',
+                  FloatBorder = 'NoiceCmdlinePopupBorderCmdline',
+                  FloatTitle = 'NoiceCmdlinePopupTitleCmdline',
+                },
+              },
+            },
+          },
+        },
       },
       popupmenu = {
         enabled = true,
