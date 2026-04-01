@@ -318,7 +318,14 @@ return {
         },
       }
 
-      local ensure_installed = vim.tbl_keys(servers or {})
+      local mason_package_overrides = {
+        lua_ls = 'lua-language-server',
+        vue_ls = 'vue-language-server',
+      }
+
+      local ensure_installed = vim.tbl_map(function(server_name)
+        return mason_package_overrides[server_name] or server_name
+      end, vim.tbl_keys(servers or {}))
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
         'delve', -- Used by nvim-dap-go
