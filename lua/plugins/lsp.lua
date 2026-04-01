@@ -27,11 +27,11 @@ return {
       end
 
       ---@param client vim.lsp.Client
-      ---@param method vim.lsp.protocol.Method
+      ---@param method vim.lsp.protocol.Method.ClientToServer
       ---@param bufnr? integer
       ---@return boolean
       local function client_supports_method(client, method, bufnr)
-        return client:supports_method(method, { bufnr = bufnr })
+        return client:supports_method(method, bufnr)
       end
 
       local function has_highlight_client(bufnr)
