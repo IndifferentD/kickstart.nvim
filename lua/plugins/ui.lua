@@ -60,6 +60,16 @@ return {
         },
         notifier = {
           enabled = true,
+          width = {
+            max = 0.7,
+          },
+        },
+        styles = {
+          notification = {
+            wo = {
+              wrap = true,
+            },
+          },
         },
         dashboard = {
           enabled = true,
@@ -74,7 +84,14 @@ return {
 ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝
           ]],
             keys = {
-              { icon = ' ', key = 'f', desc = 'Find File', action = function() telescope.find_files() end },
+              {
+                icon = ' ',
+                key = 'f',
+                desc = 'Find File',
+                action = function()
+                  telescope.find_files()
+                end,
+              },
               {
                 icon = ' ',
                 key = 'n',
@@ -84,8 +101,22 @@ return {
                   vim.cmd 'startinsert'
                 end,
               },
-              { icon = ' ', key = 'g', desc = 'Find Text', action = function() telescope.live_grep() end },
-              { icon = ' ', key = 'r', desc = 'Recent Files', action = function() telescope.oldfiles() end },
+              {
+                icon = ' ',
+                key = 'g',
+                desc = 'Find Text',
+                action = function()
+                  telescope.live_grep()
+                end,
+              },
+              {
+                icon = ' ',
+                key = 'r',
+                desc = 'Recent Files',
+                action = function()
+                  telescope.oldfiles()
+                end,
+              },
               {
                 icon = ' ',
                 key = 'c',
@@ -94,8 +125,22 @@ return {
                   telescope.find_files { cwd = vim.fn.stdpath 'config' }
                 end,
               },
-              { icon = '󰒲 ', key = 'l', desc = 'Lazy', action = function() vim.cmd 'Lazy' end },
-              { icon = ' ', key = 'q', desc = 'Quit', action = function() vim.cmd 'qa' end },
+              {
+                icon = '󰒲 ',
+                key = 'l',
+                desc = 'Lazy',
+                action = function()
+                  vim.cmd 'Lazy'
+                end,
+              },
+              {
+                icon = ' ',
+                key = 'q',
+                desc = 'Quit',
+                action = function()
+                  vim.cmd 'qa'
+                end,
+              },
             },
           },
           sections = {
