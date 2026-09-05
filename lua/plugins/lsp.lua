@@ -250,6 +250,7 @@ return {
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
+        docker_language_server = {},
         gopls = {
           settings = {
             gopls = {
@@ -319,6 +320,7 @@ return {
       }
 
       local mason_package_overrides = {
+        docker_language_server = 'docker-language-server',
         lua_ls = 'lua-language-server',
         vue_ls = 'vue-language-server',
       }
@@ -330,6 +332,7 @@ return {
         'stylua', -- Used to format Lua code
         'delve', -- Used by nvim-dap-go
         'golangci-lint', -- Used by nvim-lint for Go diagnostics
+        'hadolint', -- Used by nvim-lint for Dockerfile diagnostics
         'prettierd', -- Used by conform for frontend formatting
         'eslint_d', -- Used by nvim-lint for frontend diagnostics
       })

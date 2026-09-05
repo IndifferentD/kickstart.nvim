@@ -6,6 +6,7 @@ return {
       local lint = require 'lint'
 
       lint.linters_by_ft = {
+        dockerfile = { 'hadolint' },
         javascript = { 'eslint_d' },
         go = { 'golangcilint' },
         typescript = { 'eslint_d' },
@@ -36,6 +37,11 @@ return {
             typescript = true,
             vue = true,
           }
+
+          if filetype == 'dockerfile' then
+            lint.try_lint(nil, { ignore_errors = true })
+            return
+          end
 
           if frontend_filetypes[filetype] then
             lint.try_lint(nil, { ignore_errors = true })
