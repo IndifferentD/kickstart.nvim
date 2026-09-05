@@ -1,5 +1,23 @@
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+vim.keymap.set({ 'n', 'x' }, '<leader>yl', function()
+  if vim.bo.buftype ~= '' or vim.api.nvim_buf_get_name(0) == '' then
+    vim.notify('Current buffer is not a named file', vim.log.levels.WARN)
+    return
+  end
+
+  local location = vim.fn.expand '%:p'
+  local current_line = vim.fn.line '.'
+  local mode = vim.fn.mode()
+  if mode == 'v' or mode == 'V' or mode == '\022' then
+    local anchor_line = vim.fn.line 'v'
+    location = string.format('%s:%d-%d', location, math.min(anchor_line, current_line), math.max(anchor_line, current_line))
+  else
+    location = string.format('%s:%d', location, current_line)
+  end
+  vim.fn.setreg('+', location, 'v')
+end, { desc = '[Y]ank [L]ocation' })
+
 vim.keymap.set('n', ']d', function()
   vim.diagnostic.jump { count = 1, float = true }
 end, { desc = 'Next [D]iagnostic' })
