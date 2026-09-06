@@ -23,6 +23,9 @@ return {
       },
     },
     filesystem = {
+      filtered_items = {
+        hide_gitignored = false,
+      },
       commands = {
         live_grep_in_node = function(state)
           local node = state.tree:get_node()
