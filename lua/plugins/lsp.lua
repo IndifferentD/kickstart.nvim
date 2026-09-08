@@ -289,7 +289,9 @@ return {
         vtsls = {
           filetypes = {
             'javascript',
+            'javascriptreact',
             'typescript',
+            'typescriptreact',
             'vue',
           },
           settings = {
