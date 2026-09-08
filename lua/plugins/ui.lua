@@ -11,6 +11,10 @@ return {
           transparency = false,
         },
         highlight_groups = {
+          NeoTreeGitModified = { fg = 'foam' },
+          NeoTreeGitUntracked = { fg = 'rose' },
+          NeoTreeGitUnstaged = { fg = 'love' },
+          NeoTreeGitStaged = { fg = 'pine' },
           NoiceCmdlinePopupCmdline = { fg = 'text', bg = 'highlight_low' },
           NoiceCmdlinePopupBorderCmdline = { fg = 'love', bg = 'highlight_low' },
           NoiceCmdlinePopupTitleCmdline = { fg = 'love', bg = 'highlight_low', bold = true },
