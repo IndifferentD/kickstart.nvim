@@ -9,6 +9,15 @@ return {
     vim.api.nvim_create_autocmd('FileType', {
       pattern = 'markdown',
       callback = function(ev)
+        require('markview.extras.checkboxes').setup()
+        vim.keymap.set('n', '<leader>mt', '<cmd>Checkbox toggle<CR>', {
+          buffer = ev.buf,
+          desc = '[M]arkdown [T]oggle checkbox',
+        })
+        vim.keymap.set('x', '<leader>mt', ':Checkbox toggle<CR>', {
+          buffer = ev.buf,
+          desc = '[M]arkdown [T]oggle checkboxes',
+        })
         vim.keymap.set('n', '<leader>ms', function()
           vim.cmd 'Markview splitToggle'
         end, {
