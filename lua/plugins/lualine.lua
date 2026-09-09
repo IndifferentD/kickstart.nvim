@@ -62,14 +62,6 @@ return {
       },
       lualine_c = {
         {
-          'branch',
-          icon = '',
-        },
-        {
-          'diff',
-          symbols = { added = ' ', modified = ' ', removed = ' ' },
-        },
-        {
           function()
             local ok, navic = pcall(require, 'nvim-navic')
             if not ok or not navic.is_available() then
@@ -85,6 +77,14 @@ return {
         },
       },
       lualine_x = {
+        {
+          'branch',
+          icon = '',
+        },
+        {
+          'diff',
+          symbols = { added = ' ', modified = ' ', removed = ' ' },
+        },
         {
           'diagnostics',
           sources = { 'nvim_diagnostic' },
