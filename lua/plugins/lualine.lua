@@ -1,3 +1,8 @@
+local function python_package_path()
+  local path = vim.api.nvim_buf_get_name(0)
+  return path:match('/site%-packages/(.+)$') or path:match('/dist%-packages/(.+)$')
+end
+
 return {
   'nvim-lualine/lualine.nvim',
   dependencies = { 'nvim-tree/nvim-web-devicons' },
@@ -46,12 +51,20 @@ return {
       lualine_b = {
         {
           function()
+            if python_package_path() then
+              return 'Python packages'
+            end
             return vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
           end,
           icon = '',
         },
         {
           'filename',
+          fmt = function(filename)
+            local package_path = python_package_path()
+            local parent = package_path and package_path:match('^(.+/)[^/]+$')
+            return parent and (parent:gsub('%%', '%%%%') .. filename) or filename
+          end,
           symbols = {
             modified = ' [+]',
             readonly = ' [RO]',
