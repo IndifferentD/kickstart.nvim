@@ -1,6 +1,14 @@
-local function python_package_path()
+local function python_library_location()
   local path = vim.api.nvim_buf_get_name(0)
-  return path:match('/site%-packages/(.+)$') or path:match('/dist%-packages/(.+)$')
+  local package_path = path:match('/site%-packages/(.+)$') or path:match('/dist%-packages/(.+)$')
+  if package_path then
+    return 'Python packages', package_path
+  end
+
+  local version, library_path = path:match('/lib/python(%d+%.%d+)/(.+)$')
+  if version then
+    return 'Python ' .. version .. ' stdlib', library_path
+  end
 end
 
 return {
@@ -51,8 +59,9 @@ return {
       lualine_b = {
         {
           function()
-            if python_package_path() then
-              return 'Python packages'
+            local label = python_library_location()
+            if label then
+              return label
             end
             return vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
           end,
@@ -61,8 +70,8 @@ return {
         {
           'filename',
           fmt = function(filename)
-            local package_path = python_package_path()
-            local parent = package_path and package_path:match('^(.+/)[^/]+$')
+            local _, library_path = python_library_location()
+            local parent = library_path and library_path:match('^(.+/)[^/]+$')
             return parent and (parent:gsub('%%', '%%%%') .. filename) or filename
           end,
           symbols = {
