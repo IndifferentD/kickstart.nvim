@@ -5,6 +5,11 @@ local function library_location()
     return 'Go modules', module_path
   end
 
+  local go_stdlib_path = path:match '/go/src/(.+)$'
+  if go_stdlib_path then
+    return 'Go stdlib', go_stdlib_path
+  end
+
   local package_path = path:match '/site%-packages/(.+)$' or path:match '/dist%-packages/(.+)$'
   if package_path then
     return 'Python packages', package_path
