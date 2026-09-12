@@ -96,11 +96,13 @@ return {
         vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorHold', 'InsertLeave' }, {
           buffer = bufnr,
           group = codelens_group,
-          callback = vim.lsp.codelens.refresh,
+          callback = function(event)
+            vim.lsp.codelens.refresh { bufnr = event.buf }
+          end,
         })
 
         map('<leader>cl', vim.lsp.codelens.run, '[C]ode [L]ens')
-        vim.lsp.codelens.refresh()
+        vim.lsp.codelens.refresh { bufnr = bufnr }
       end
 
       local function setup_inlay_hints(client, bufnr, map)

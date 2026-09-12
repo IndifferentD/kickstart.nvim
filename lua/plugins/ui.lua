@@ -31,18 +31,6 @@ return {
     opts = { signs = false },
   },
   {
-    'j-hui/fidget.nvim',
-    opts = {
-      progress = {
-        display = {
-          render_limit = 16,
-          done_ttl = 3,
-          skip_history = false,
-        },
-      },
-    },
-  },
-  {
     'folke/snacks.nvim',
     priority = 1000,
     lazy = false,
