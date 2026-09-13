@@ -21,7 +21,7 @@ return {
     end,
     opts = {
       window = {
-        placement = { horizontal = 'right', vertical = 'top' },
+        placement = { horizontal = 'left', vertical = 'bottom' },
       },
       render = function(props)
         local counts = vim.diagnostic.count(props.buf)
