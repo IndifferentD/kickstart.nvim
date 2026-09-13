@@ -16,7 +16,13 @@ return {
           local icons = vim.tbl_map(function(icon)
             return icon ~= '' and (icon .. ' ') or ''
           end, require('jb.icons').kind)
-          return { highlight = true, separator = ' › ', depth_limit = 5, icons = icons }
+          return {
+            highlight = true,
+            separator = ' › ',
+            depth_limit = 5,
+            icons = icons,
+            lsp = { auto_attach = true, preference = { 'vue_ls', 'vtsls' } },
+          }
         end,
       },
 
@@ -81,15 +87,6 @@ return {
             end)
           end,
         })
-      end
-
-      local function setup_navic(client, bufnr)
-        if client.server_capabilities.documentSymbolProvider then
-          local navic = require 'nvim-navic'
-          if not navic.is_available(bufnr) then
-            navic.attach(client, bufnr)
-          end
-        end
       end
 
       local function setup_codelens(client, bufnr, map)
@@ -191,7 +188,6 @@ return {
 
           configure_client_capabilities(client)
           setup_document_highlight(client, event.buf)
-          setup_navic(client, event.buf)
           setup_codelens(client, event.buf, map)
           setup_inlay_hints(client, event.buf, map)
         end,
