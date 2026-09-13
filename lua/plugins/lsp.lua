@@ -11,11 +11,13 @@ return {
 
       {
         'SmiteshP/nvim-navic',
-        opts = {
-          highlight = true,
-          separator = ' > ',
-          depth_limit = 5,
-        },
+        dependencies = { 'nickkadutskyi/jb.nvim' },
+        opts = function()
+          local icons = vim.tbl_map(function(icon)
+            return icon ~= '' and (icon .. ' ') or ''
+          end, require('jb.icons').kind)
+          return { highlight = true, separator = ' › ', depth_limit = 5, icons = icons }
+        end,
       },
 
       -- Allows extra capabilities provided by blink.cmp
@@ -108,6 +110,8 @@ return {
           vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = bufnr }, { bufnr = bufnr })
         end, '[T]oggle Inlay [H]ints')
       end
+
+      vim.lsp.inlay_hint.enable(true)
 
       local function configure_client_capabilities(client)
         if client.name == 'sqls' then
@@ -306,6 +310,7 @@ return {
         lua_ls = {
           settings = {
             Lua = {
+              hint = { enable = true, paramName = 'All' },
               completion = {
                 callSnippet = 'Replace',
               },

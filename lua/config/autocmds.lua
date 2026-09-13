@@ -25,7 +25,8 @@ vim.api.nvim_create_autocmd('FileType', {
       end
     end
 
-    if vim.treesitter.language.add(lang) then
+    local has_highlights = #vim.treesitter.query.get_files(lang, 'highlights') > 0
+    if has_highlights and vim.treesitter.language.add(lang) then
       start()
     elseif require('nvim-treesitter.parsers')[lang] then
       require('nvim-treesitter').install({ lang }):await(function(err, installed)

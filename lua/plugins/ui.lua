@@ -1,5 +1,57 @@
 return {
   {
+    'b0o/incline.nvim',
+    event = 'VeryLazy',
+    config = function(_, opts)
+      local incline = require 'incline'
+      incline.setup(opts)
+      vim.api.nvim_create_autocmd('DiagnosticChanged', {
+        group = vim.api.nvim_create_augroup('incline-diagnostics', { clear = true }),
+        callback = function()
+          incline.refresh()
+        end,
+      })
+      vim.api.nvim_create_autocmd('User', {
+        group = 'incline-diagnostics',
+        pattern = 'GitSignsUpdate',
+        callback = function()
+          incline.refresh()
+        end,
+      })
+    end,
+    opts = {
+      window = {
+        placement = { horizontal = 'right', vertical = 'top' },
+      },
+      render = function(props)
+        local counts = vim.diagnostic.count(props.buf)
+        local icons = vim.g.have_nerd_font and { '', '', '', '' } or { 'E', 'W', 'I', 'H' }
+        local result = {}
+        for severity, name in ipairs { 'Error', 'Warn', 'Info', 'Hint' } do
+          local count = counts[severity] or 0
+          if count > 0 then
+            result[#result + 1] = { icons[severity] .. ' ' .. count .. ' ', group = 'Diagnostic' .. name }
+          end
+        end
+        local git = vim.b[props.buf].gitsigns_status_dict or {}
+        local git_icons = vim.g.have_nerd_font and { '', '', '' } or { '+', '~', '-' }
+        local has_diagnostics = #result > 0
+        for index, kind in ipairs { 'added', 'changed', 'removed' } do
+          local count = git[kind] or 0
+          if count > 0 then
+            if has_diagnostics then
+              result[#result + 1] = { '│ ', group = 'Comment' }
+              has_diagnostics = false
+            end
+            local groups = { 'GitSignsAdd', 'GitSignsChange', 'GitSignsDelete' }
+            result[#result + 1] = { git_icons[index] .. ' ' .. count .. ' ', group = groups[index] }
+          end
+        end
+        return #result > 0 and result or nil
+      end,
+    },
+  },
+  {
     'petertriho/nvim-scrollbar',
     event = { 'BufReadPost', 'BufNewFile' },
     opts = {

@@ -23,13 +23,13 @@ end
 
 return {
   'nvim-lualine/lualine.nvim',
-  dependencies = { 'nvim-tree/nvim-web-devicons' },
+  dependencies = { 'nvim-tree/nvim-web-devicons', 'nickkadutskyi/jb.nvim' },
   opts = {
     options = {
       icons_enabled = true,
       theme = 'auto',
-      component_separators = { left = '', right = '' },
-      section_separators = { left = '', right = '' },
+      component_separators = { left = '', right = '' },
+      section_separators = { left = '', right = '' },
       disabled_filetypes = {
         statusline = {},
         winbar = {},
@@ -66,7 +66,15 @@ return {
           end,
         },
       },
-      lualine_b = {
+      lualine_b = {},
+      lualine_c = {
+        {
+          'nav_bar',
+          padding = { left = 1, right = 0 },
+          cond = function()
+            return library_location() == nil
+          end,
+        },
         {
           function()
             local label = library_location()
@@ -76,9 +84,14 @@ return {
             return vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
           end,
           icon = '',
+          cond = function()
+            return library_location() ~= nil
+          end,
         },
+        { 'filetype', icon_only = true, padding = { left = 0, right = 0 } },
         {
           'filename',
+          padding = { left = 0, right = 1 },
           fmt = function(filename)
             local _, library_path = library_location()
             local parent = library_path and library_path:match '^(.+/)[^/]+$'
@@ -91,45 +104,25 @@ return {
             newfile = '[New]',
           },
         },
-      },
-      lualine_c = {
         {
           function()
             local ok, navic = pcall(require, 'nvim-navic')
             if not ok or not navic.is_available() then
               return ''
             end
-            return navic.get_location()
+            return '› ' .. navic.get_location()
           end,
           cond = function()
             local ok, navic = pcall(require, 'nvim-navic')
             return ok and navic.is_available()
           end,
-          color = { fg = '#7aa2f7' },
+          padding = { left = 0, right = 1 },
         },
       },
       lualine_x = {
         {
           'branch',
           icon = '',
-        },
-        {
-          'diff',
-          symbols = { added = ' ', modified = ' ', removed = ' ' },
-        },
-        {
-          'diagnostics',
-          sources = { 'nvim_diagnostic' },
-          sections = { 'error', 'warn', 'info', 'hint' },
-          symbols = {
-            error = ' ',
-            warn = ' ',
-            info = ' ',
-            hint = ' ',
-          },
-          colored = true,
-          update_in_insert = false,
-          always_visible = false,
         },
         {
           function()
