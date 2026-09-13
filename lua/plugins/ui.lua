@@ -1,5 +1,13 @@
 return {
   {
+    'petertriho/nvim-scrollbar',
+    event = { 'BufReadPost', 'BufNewFile' },
+    opts = {
+      excluded_buftypes = { 'terminal', 'nofile', 'prompt', 'quickfix' },
+      handlers = { diagnostic = true },
+    },
+  },
+  {
     'nickkadutskyi/jb.nvim',
     lazy = false,
     priority = 1000,
