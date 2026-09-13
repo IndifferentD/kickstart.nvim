@@ -252,6 +252,7 @@ return {
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
+        cssls = {},
         docker_language_server = {},
         gopls = {
           settings = {
@@ -324,6 +325,7 @@ return {
       }
 
       local mason_package_overrides = {
+        cssls = 'css-lsp',
         docker_language_server = 'docker-language-server',
         lua_ls = 'lua-language-server',
         vue_ls = 'vue-language-server',
