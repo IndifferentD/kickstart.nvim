@@ -1,8 +1,32 @@
 return {
   {
+    'nickkadutskyi/jb.nvim',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require('jb').setup { disable_hl_args = { italic = true } }
+      vim.api.nvim_create_autocmd('ColorScheme', {
+        group = vim.api.nvim_create_augroup('jb-noice-colors', { clear = true }),
+        pattern = 'jb',
+        callback = function()
+          for group, target in pairs {
+            NoiceCmdlinePopupCmdline = 'NormalFloat',
+            NoiceCmdlinePopupBorderCmdline = 'FloatBorder',
+            NoiceCmdlinePopupTitleCmdline = 'FloatTitle',
+            NoiceCmdlineIconCmdline = 'Special',
+          } do
+            vim.api.nvim_set_hl(0, group, { link = target })
+          end
+        end,
+      })
+      vim.o.background = 'dark'
+      vim.cmd.colorscheme 'jb'
+    end,
+  },
+  {
     'rose-pine/neovim',
     name = 'rose-pine',
-    lazy = false,
+    lazy = true,
     priority = 1000,
     config = function()
       require('rose-pine').setup {
