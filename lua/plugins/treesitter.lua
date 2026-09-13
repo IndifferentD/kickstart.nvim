@@ -2,9 +2,10 @@ return {
   {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-    main = 'nvim-treesitter.configs',
+    branch = 'main',
+    lazy = false,
     opts = {
-      ensure_installed = {
+      parsers = {
         'bash',
         'c',
         'css',
@@ -29,12 +30,11 @@ return {
         'vim',
         'vimdoc',
       },
-      auto_install = true,
-      highlight = {
-        enable = true,
-        additional_vim_regex_highlighting = { 'ruby' },
-      },
-      indent = { enable = true, disable = { 'ruby' } },
     },
+    config = function(_, opts)
+      local treesitter = require 'nvim-treesitter'
+      treesitter.setup {}
+      treesitter.install(opts.parsers)
+    end,
   },
 }

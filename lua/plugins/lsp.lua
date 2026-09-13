@@ -83,7 +83,10 @@ return {
 
       local function setup_navic(client, bufnr)
         if client.server_capabilities.documentSymbolProvider then
-          require('nvim-navic').attach(client, bufnr)
+          local navic = require 'nvim-navic'
+          if not navic.is_available(bufnr) then
+            navic.attach(client, bufnr)
+          end
         end
       end
 
@@ -92,17 +95,8 @@ return {
           return
         end
 
-        local codelens_group = vim.api.nvim_create_augroup(buffer_augroup_name('kickstart-lsp-codelens', bufnr), { clear = true })
-        vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorHold', 'InsertLeave' }, {
-          buffer = bufnr,
-          group = codelens_group,
-          callback = function(event)
-            vim.lsp.codelens.refresh { bufnr = event.buf }
-          end,
-        })
-
         map('<leader>cl', vim.lsp.codelens.run, '[C]ode [L]ens')
-        vim.lsp.codelens.refresh { bufnr = bufnr }
+        vim.lsp.codelens.enable(true, { bufnr = bufnr })
       end
 
       local function setup_inlay_hints(client, bufnr, map)
