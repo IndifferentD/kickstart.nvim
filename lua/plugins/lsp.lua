@@ -7,8 +7,8 @@ return {
       -- Mason must be loaded before its dependents so we need to set it up here.
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
       { 'williamboman/mason.nvim', opts = {} },
+      'mason-org/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-
       {
         'SmiteshP/nvim-navic',
         dependencies = { 'nickkadutskyi/jb.nvim' },
@@ -274,6 +274,13 @@ return {
             },
           },
         },
+        -- nushell = {
+        --   cmd = { 'nu', '--lsp' },
+        --   root_dir = function(bufnr, on_dir)
+        --     local filename = vim.api.nvim_buf_get_name(bufnr)
+        --     on_dir(vim.fs.root(filename, { '.git' }) or vim.fs.dirname(filename))
+        --   end,
+        -- },
         basedpyright = {
           cmd = { 'basedpyright-langserver', '--stdio' },
           filetypes = { 'python' },
@@ -330,32 +337,34 @@ return {
           cmd = { 'ruff', 'server' },
           filetypes = { 'python' },
         },
+        nil_ls = {},
       }
-
-      local mason_package_overrides = {
-        cssls = 'css-lsp',
-        docker_language_server = 'docker-language-server',
-        lua_ls = 'lua-language-server',
-        vue_ls = 'vue-language-server',
+      local mason_excluded_servers = {
+        nushell = true,
+        nixd = true,
       }
+      local mason_servers = vim.tbl_filter(function(server_name)
+        return not mason_excluded_servers[server_name]
+      end, vim.tbl_keys(servers))
 
-      local ensure_installed = vim.tbl_map(function(server_name)
-        return mason_package_overrides[server_name] or server_name
-      end, vim.tbl_keys(servers or {}))
-      vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
-        'delve', -- Used by nvim-dap-go
-        'golangci-lint', -- Used by nvim-lint for Go diagnostics
-        'hadolint', -- Used by nvim-lint for Dockerfile diagnostics
-        'prettierd', -- Used by conform for frontend formatting
-        'eslint_d', -- Used by nvim-lint for frontend diagnostics
-      })
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      require('mason-lspconfig').setup {
+        ensure_installed = mason_servers,
+        automatic_enable = false,
+      }
+      require('mason-tool-installer').setup {
+        ensure_installed = {
+          'stylua', -- Used to format Lua code
+          'delve', -- Used by nvim-dap-go
+          'golangci-lint', -- Used by nvim-lint for Go diagnostics
+          'hadolint', -- Used by nvim-lint for Dockerfile diagnostics
+          'prettierd', -- Used by conform for frontend formatting
+          'eslint_d', -- Used by nvim-lint for frontend diagnostics
+        },
+      }
 
       for server_name, server in pairs(servers) do
-        -- Merge blink.cmp capabilities into each server before enabling it via
-        -- the Neovim 0.12 LSP API.
         server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+
         vim.lsp.config(server_name, server)
         vim.lsp.enable(server_name)
       end
