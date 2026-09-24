@@ -251,12 +251,25 @@ return {
         gopls = {
           settings = {
             gopls = {
+              hints = {
+                assignVariableTypes = true,
+                compositeLiteralFields = true,
+                constantValues = true,
+                functionTypeParameters = true,
+                parameterNames = true,
+                rangeVariableTypes = true,
+              },
               vulncheck = 'Imports',
               codelenses = {
                 run_govulncheck = true,
                 upgrade_dependency = true,
                 tidy = true,
                 vendor = true,
+              },
+              analyses = {
+                unusedparams = true,
+                fieldalignment = true,
+                inferTypeArgs = true,
               },
             },
           },
