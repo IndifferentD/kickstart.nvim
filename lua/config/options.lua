@@ -1,7 +1,6 @@
 -- Core editor options.
 vim.opt.number = true
-vim.opt.relativenumber = true
-vim.opt.statuscolumn = '%=%{v:relnum ? v:relnum : v:lnum} %s'
+vim.opt.relativenumber = false
 vim.opt.termguicolors = true
 vim.opt.mouse = 'a'
 vim.opt.showmode = false
