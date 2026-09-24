@@ -77,6 +77,14 @@ return {
           } do
             vim.api.nvim_set_hl(0, group, { link = target })
           end
+          -- Temporary jb.nvim workarounds; the full root cause is not yet confirmed upstream.
+          -- Ordinary LSP variables inherit reassignment underlines; keep only Go shadowing marked.
+          vim.api.nvim_set_hl(0, '@lsp.type.variable.go', { link = '@variable.go' })
+          vim.api.nvim_set_hl(0, '@lsp.type.variable.python', { link = '@variable.python' })
+          vim.api.nvim_set_hl(0, '@lsp.mod.shadowing.go', { underline = true })
+          -- Restore invisible preview matches; JSON null handling is a suspected cause.
+          -- Recheck these overrides after upstream fixes before removing them.
+          vim.api.nvim_set_hl(0, 'TelescopePreviewLine', { link = 'Search' })
         end,
       })
       vim.o.background = 'dark'
