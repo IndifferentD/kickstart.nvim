@@ -10,7 +10,7 @@ return {
     { '<leader>gds', '<cmd>Gdiffsplit<cr>', desc = 'Fugitive: Diff split (index <-> working tree)' },
 
     -- Quick actions
-    { '<leader>gbl', '<cmd>Gblame<cr>', desc = 'Fugitive: Blame' },
+    { '<leader>gbl', '<cmd>Git blame<cr>', desc = 'Fugitive: Blame' },
     -- { "<leader>gpl", "<cmd>Git pull<cr>", desc = "Fugitive: Pull" },
     -- { "<leader>gps", "<cmd>Git push<cr>", desc = "Fugitive: Push" },
   },
