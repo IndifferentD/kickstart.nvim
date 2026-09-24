@@ -1,5 +1,5 @@
 return {
-  'tpope/vim-sleuth',
+  'NMAC427/guess-indent.nvim',
   {
     'echasnovski/mini.nvim',
     config = function()
