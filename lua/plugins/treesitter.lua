@@ -30,6 +30,7 @@ return {
         'vue',
         'vim',
         'vimdoc',
+        'nix',
       },
     },
     config = function(_, opts)
