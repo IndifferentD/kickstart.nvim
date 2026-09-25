@@ -3,7 +3,7 @@
 ## Purpose
 
 This repository contains a personal Neovim configuration in Lua.
-The goal is to keep it fast, readable, easy to debug, and easy to extend.
+The goal is to keep it fast, readable, easy to debug, easy to extend, and optimized for an efficient workflow.
 
 ## High-level architecture
 
