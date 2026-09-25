@@ -112,3 +112,20 @@ After config changes, prefer checks such as:
 - affected keymaps still work
 - affected filetypes load expected settings
 - plugin loads only when expected
+
+## Before adding a new plugin
+
+Ask:
+1. Can built-in Neovim do this already?
+2. Is the plugin maintained?
+3. Can it be lazy-loaded?
+4. Is the feature worth long-term config cost?
+5. Does it overlap with an existing plugin?
+
+## Before restructuring files
+
+Ask:
+1. Does this reduce cognitive load?
+2. Will future edits become easier?
+3. Is this a real boundary, or just aesthetics?
+4. Can this be done without breaking imports and require paths?
