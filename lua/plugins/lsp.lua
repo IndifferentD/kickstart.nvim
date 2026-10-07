@@ -75,6 +75,11 @@ return {
           buffer = bufnr,
           callback = function(event)
             vim.schedule(function()
+              -- Diffview can remove a buffer before this callback runs.
+              if not vim.api.nvim_buf_is_valid(event.buf) then
+                return
+              end
+
               if has_highlight_client(event.buf) then
                 return
               end
@@ -115,13 +120,6 @@ return {
           client.server_capabilities.documentFormattingProvider = false
           client.server_capabilities.documentRangeFormattingProvider = false
         end
-      end
-
-      -- Neovim 0.11 ships global LSP defaults like `gra`, `grr`, `grn`, etc.
-      -- They make `gr` behave like a prefix, which conflicts with this config's
-      -- direct `gr` mapping for references.
-      for _, keys in ipairs { 'gra', 'gri', 'grn', 'grr', 'grt' } do
-        pcall(vim.keymap.del, 'n', keys)
       end
 
       -- If you're wondering about lsp vs treesitter, you can check out the wonderfully
@@ -361,6 +359,17 @@ return {
           'eslint_d', -- Used by nvim-lint for frontend diagnostics
         },
       }
+
+      -- Diffview's editable index buffers have a virtual URI but a normal buftype.
+      -- acwrite preserves :w staging via BufWriteCmd and prevents LSP autostart.
+      vim.api.nvim_create_autocmd('FileType', {
+        group = vim.api.nvim_create_augroup('diffview-index-buffers', { clear = true }),
+        callback = function(event)
+          if vim.api.nvim_buf_get_name(event.buf):match '^diffview://' and vim.bo[event.buf].buftype == '' then
+            vim.bo[event.buf].buftype = 'acwrite'
+          end
+        end,
+      })
 
       for server_name, server in pairs(servers) do
         server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})

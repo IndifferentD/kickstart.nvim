@@ -1,5 +1,12 @@
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+-- Neovim's normal-mode defaults use `gr` as a prefix: gra code action,
+-- gri implementation, grn rename, grr references, grt type definition.
+-- Remove them so the buffer-local `gr` references mapping works immediately.
+for _, keys in ipairs { 'gra', 'gri', 'grn', 'grr', 'grt' } do
+  pcall(vim.keymap.del, 'n', keys)
+end
+
 vim.keymap.set({ 'n', 'x' }, '<leader>yl', function()
   if vim.bo.buftype ~= '' or vim.api.nvim_buf_get_name(0) == '' then
     vim.notify('Current buffer is not a named file', vim.log.levels.WARN)
