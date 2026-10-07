@@ -1,6 +1,12 @@
 return {
   'sindrets/diffview.nvim',
   config = function()
+    require('diffview').setup {
+      view = {
+        default = { winbar_info = true },
+      },
+    }
+
     vim.opt.diffopt:append {
       'algorithm:histogram',
       'indent-heuristic',

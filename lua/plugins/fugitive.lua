@@ -7,7 +7,6 @@ return {
 
     -- Diff against index / staging workflow
     { '<leader>gvd', '<cmd>Gvdiffsplit<cr>', desc = 'Fugitive: Vertical diff (index <-> working tree)' },
-    { '<leader>gds', '<cmd>Gdiffsplit<cr>', desc = 'Fugitive: Diff split (index <-> working tree)' },
 
     -- Quick actions
     { '<leader>gbl', '<cmd>Git blame<cr>', desc = 'Fugitive: Blame' },
