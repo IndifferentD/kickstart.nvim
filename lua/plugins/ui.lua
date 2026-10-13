@@ -126,6 +126,15 @@ return {
     'folke/snacks.nvim',
     priority = 1000,
     lazy = false,
+    keys = {
+      {
+        '<leader>nh',
+        function()
+          Snacks.notifier.show_history()
+        end,
+        desc = '[N]otification [H]istory',
+      },
+    },
     init = function()
       vim.g.snacks_animate = false
     end,
