@@ -1,9 +1,10 @@
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Neovim's normal-mode defaults use `gr` as a prefix: gra code action,
--- gri implementation, grn rename, grr references, grt type definition.
+-- gri implementation, grn rename, grr references, grt type definition,
+-- grx code lens.
 -- Remove them so the buffer-local `gr` references mapping works immediately.
-for _, keys in ipairs { 'gra', 'gri', 'grn', 'grr', 'grt' } do
+for _, keys in ipairs { 'gra', 'gri', 'grn', 'grr', 'grt', 'grx' } do
   pcall(vim.keymap.del, 'n', keys)
 end
 
