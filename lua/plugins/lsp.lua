@@ -335,6 +335,7 @@ return {
           cmd = { 'ruff', 'server' },
           filetypes = { 'python' },
         },
+        rust_analyzer = {},
         nil_ls = {},
       }
       local mason_excluded_servers = {
