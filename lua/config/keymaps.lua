@@ -26,13 +26,6 @@ vim.keymap.set({ 'n', 'x' }, '<leader>yl', function()
   vim.fn.setreg('+', location, 'v')
 end, { desc = '[Y]ank [L]ocation' })
 
-vim.keymap.set('n', ']d', function()
-  vim.diagnostic.jump { count = 1, float = true }
-end, { desc = 'Next [D]iagnostic' })
-vim.keymap.set('n', '[d', function()
-  vim.diagnostic.jump { count = -1, float = true }
-end, { desc = 'Previous [D]iagnostic' })
-
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 vim.keymap.set('n', '<leader>Q', vim.diagnostic.setqflist, { desc = 'Open workspace diagnostic quickfix list' })
 vim.keymap.set('n', '<leader>e', function()
