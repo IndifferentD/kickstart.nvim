@@ -26,3 +26,11 @@ vim.opt.scrolloff = 10
 vim.opt.confirm = true
 
 vim.opt.guicursor:append 'a:blinkwait700-blinkon400-blinkoff350'
+
+vim.diagnostic.config {
+  jump = {
+    on_jump = function(_, bufnr)
+      vim.diagnostic.open_float { bufnr = bufnr, scope = 'cursor', focus = false }
+    end,
+  },
+}
