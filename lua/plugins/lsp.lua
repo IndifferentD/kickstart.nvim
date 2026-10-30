@@ -357,6 +357,7 @@ return {
           'golangci-lint', -- Used by nvim-lint for Go diagnostics
           'hadolint', -- Used by nvim-lint for Dockerfile diagnostics
           'prettierd', -- Used by conform for frontend formatting
+          'pgformatter', -- Used by conform for SQL formatting
           'eslint_d', -- Used by nvim-lint for frontend diagnostics
         },
       }
