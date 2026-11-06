@@ -354,6 +354,7 @@ return {
         ensure_installed = {
           'stylua', -- Used to format Lua code
           'delve', -- Used by nvim-dap-go
+          'goimports', -- Used by conform to format Go and organize imports
           'golangci-lint', -- Used by nvim-lint for Go diagnostics
           'hadolint', -- Used by nvim-lint for Dockerfile diagnostics
           'prettierd', -- Used by conform for frontend formatting
