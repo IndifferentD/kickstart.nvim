@@ -55,8 +55,10 @@ return {
     'petertriho/nvim-scrollbar',
     event = { 'BufReadPost', 'BufNewFile' },
     opts = {
-      excluded_buftypes = { 'terminal', 'nofile', 'prompt', 'quickfix' },
-      handlers = { diagnostic = true },
+      exclude = {
+        buftypes = { 'terminal', 'nofile', 'prompt', 'quickfix' },
+      },
+      providers = { diagnostic = true },
     },
   },
   {
